@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Local DB / env
+*.db
+*.sqlite3
+.env
+.env.local
+
+# Node / dashboard
+node_modules/
+dist/
+.vite/
+
+# Android
+android-client/.gradle/
+android-client/build/
+android-client/**/build/
+*.apk
+local.properties
+
+# OS / editor
+.DS_Store
+.idea/
+*.log
