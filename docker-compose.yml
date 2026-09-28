@@ -1,0 +1,38 @@
+# RAT Detection Lab — local compose. Nothing is published to the host beyond
+# the dashboard and API on loopback. The database is reachable only on the
+# internal lab-network.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: lab
+      POSTGRES_PASSWORD: lab
+      POSTGRES_DB: ratlab
+    networks: [lab-network]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    environment:
+      LAB_DATABASE_URL: postgresql+psycopg://lab:lab@postgres:5432/ratlab
+      LAB_HOST: 0.0.0.0
+      LAB_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    depends_on: [postgres]
+    networks: [lab-network]
+    ports:
+      - "127.0.0.1:8000:8000"   # loopback only
+
+  dashboard:
+    build: ./dashboard
+    networks: [lab-network]
+    ports:
+      - "127.0.0.1:5173:5173"   # loopback only
+    depends_on: [backend]
+
+networks:
+  lab-network:
+    driver: bridge
+
+volumes:
+  pgdata:
